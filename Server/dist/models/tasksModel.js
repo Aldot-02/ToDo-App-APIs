@@ -3,6 +3,10 @@ const tasksSchema = new Schema({
     text: {
         type: String,
         required: true
+    },
+    isComplete: {
+        type: Boolean,
+        default: false
     }
 });
 export default mongoose.model('TasksList', tasksSchema);
