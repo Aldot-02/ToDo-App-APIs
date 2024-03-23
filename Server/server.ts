@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import routes from './routes/tasksRoute.js';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser'
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const PORT: number = parseInt(process.env.PORT || '9000');
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 const CONNECTION: string | undefined = process.env.MONGODB_URL;
 if (!CONNECTION) {
