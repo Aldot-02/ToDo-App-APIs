@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import UserModel, { User } from "../models/UserModel.js";
+import UserModel, { User } from "../models/userModel.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -70,19 +70,9 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
             // ACCESS TOKEN
             const accessToken = sign({id:user._id}, "access_secret", {expiresIn: '5m'});
-    
-            // REFRESH TOKEN
-            const refreshToken = sign({id:user._id}, "refresh_secret", {expiresIn: '1w'});
 
             res.cookie("access", accessToken, {
                 maxAge: 24 * 60 * 60 * 1000, // 1 day
-                sameSite: 'none',
-                secure: true,
-                httpOnly: true
-            });
-
-            res.cookie("refresh", refreshToken, {
-                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day
                 sameSite: 'none',
                 secure: true,
                 httpOnly: true
