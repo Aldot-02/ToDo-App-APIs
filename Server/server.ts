@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import routes from './routes/tasksRoute.js';
+import routes from './routes/tasksRoute';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser'
 
@@ -22,7 +22,7 @@ if (!CONNECTION) {
 
 mongoose.connect(CONNECTION)
   .then(() => console.log("Connected to Database"))
-  .catch((error) => console.error(error));
+  .catch((error: any) => console.error(error));
 
 app.use(routes);
 app.listen(PORT, () => console.log(`Listening on: ${PORT}`));
