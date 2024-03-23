@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getTasks, saveTasks, updateTasks, deleteTasks, markTaskAsComplete, getCompletedTasks } from '../controllers/tasksController';
-import { AuthenticatedUser, Logout, loginUser, registerUser } from '../controllers/authController';
+import { getTasks, saveTasks, updateTasks, deleteTasks, markTaskAsComplete, getCompletedTasks } from '../controllers/tasksController.js';
+import { AuthenticatedUser, Logout, loginUser, registerUser } from '../controllers/authController.js';
 
 const router = Router();
 

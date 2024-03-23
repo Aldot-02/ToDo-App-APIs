@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import routes from './routes/tasksRoute';
+import routes from './routes/tasksRoute.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser'
 

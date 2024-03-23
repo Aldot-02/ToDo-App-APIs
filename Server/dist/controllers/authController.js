@@ -1,14 +1,8 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Logout = exports.AuthenticatedUser = exports.loginUser = exports.registerUser = void 0;
-const UserModel_1 = __importDefault(require("../models/UserModel"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const { sign, verify } = jsonwebtoken_1.default;
-const registerUser = async (req, res) => {
+import UserModel from "../models/UserModel.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+const { sign, verify } = jwt;
+export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     if (!name) {
         res.status(400).json({ message: "Full Name is required" });
@@ -23,14 +17,14 @@ const registerUser = async (req, res) => {
         return;
     }
     try {
-        const existingUser = await UserModel_1.default.findOne({ email });
+        const existingUser = await UserModel.findOne({ email });
         if (existingUser) {
             res.status(409).json({ message: 'Account already exists with this email.' });
             return;
         }
-        const salt = await bcrypt_1.default.genSalt(10);
-        const hashedPassword = await bcrypt_1.default.hash(password, salt);
-        const newUser = new UserModel_1.default({
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const newUser = new UserModel({
             name,
             email,
             password: hashedPassword,
@@ -42,8 +36,7 @@ const registerUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-exports.registerUser = registerUser;
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     if (!email) {
         res.status(400).json({ message: "Email is required" });
@@ -54,9 +47,9 @@ const loginUser = async (req, res) => {
         return;
     }
     try {
-        const user = await UserModel_1.default.findOne({ email });
+        const user = await UserModel.findOne({ email });
         if (user) {
-            const validity = await bcrypt_1.default.compare(password, user.password);
+            const validity = await bcrypt.compare(password, user.password);
             if (!validity) {
                 res.status(400).json({ message: "Wrong Credentials" });
                 return;
@@ -90,9 +83,8 @@ const loginUser = async (req, res) => {
         return;
     }
 };
-exports.loginUser = loginUser;
 // Getting Authenticated User
-const AuthenticatedUser = async (req, res) => {
+export const AuthenticatedUser = async (req, res) => {
     try {
         const accessToken = req.cookies['access'];
         if (!accessToken) {
@@ -108,7 +100,7 @@ const AuthenticatedUser = async (req, res) => {
             });
             return;
         }
-        const user = await UserModel_1.default.findOne({ _id: payload.id });
+        const user = await UserModel.findOne({ _id: payload.id });
         if (!user) {
             res.status(401).send({
                 message: 'unauthenticated'
@@ -124,10 +116,8 @@ const AuthenticatedUser = async (req, res) => {
         return;
     }
 };
-exports.AuthenticatedUser = AuthenticatedUser;
-const Logout = async (req, res) => {
+export const Logout = async (req, res) => {
     res.cookie('access', '', { maxAge: -1 });
     res.status(200).json({ message: "Logout was successful" });
 };
-exports.Logout = Logout;
 //# sourceMappingURL=authController.js.map
