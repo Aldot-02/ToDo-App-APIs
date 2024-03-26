@@ -11,7 +11,10 @@ const app = express();
 const PORT: number = parseInt(process.env.PORT || '9000');
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: ['https://todo-app-apis.onrender.com', 'http://localhost:3000', 'https://atlp-todo.netlify.app']
+}));
 app.use(cookieParser());
 
 const CONNECTION: string | undefined = process.env.MONGODB_URL;
