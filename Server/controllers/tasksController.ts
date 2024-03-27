@@ -3,7 +3,9 @@ import tasksModel, { Task } from '../models/tasksModel.js';
 
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
     try {
-        const tasks: Task[] = await tasksModel.find();
+        const userId = req.body.userId;
+
+        const tasks: Task[] = await tasksModel.find({ userId });
         res.send(tasks);
     } catch (error) {
         console.error(error);
@@ -14,7 +16,9 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
 export const saveTasks = async (req: Request, res: Response): Promise<void> => {
     try {
         const { text }: { text: string } = req.body;
-        const task = await tasksModel.create({ text });
+        const userId = req.body.userId;
+
+        const task = await tasksModel.create({ userId, text });
         console.log("Task Addition was Successful");
         console.log(task);
         res.send(task);
@@ -27,7 +31,9 @@ export const saveTasks = async (req: Request, res: Response): Promise<void> => {
 export const updateTasks = async (req: Request, res: Response): Promise<void> => {
     try {
         const { _id, text }: { _id: string; text: string } = req.body;
-        await tasksModel.findByIdAndUpdate(_id, { text });
+        const userId = req.body.userId;
+
+        await tasksModel.findOneAndUpdate({ _id, userId }, { text });
         res.send("Task Updated Successfully");
     } catch (error) {
         console.error(error);
@@ -38,7 +44,9 @@ export const updateTasks = async (req: Request, res: Response): Promise<void> =>
 export const deleteTasks = async (req: Request, res: Response): Promise<void> => {
     try {
         const { _id }: { _id: string } = req.body;
-        await tasksModel.findByIdAndDelete(_id);
+        const userId = req.body.userId;
+
+        await tasksModel.findOneAndDelete({ _id, userId });
         res.send("Task Deleted Successfully");
     } catch (error) {
         console.error(error);
@@ -49,7 +57,9 @@ export const deleteTasks = async (req: Request, res: Response): Promise<void> =>
 export const markTaskAsComplete = async (req: Request, res: Response): Promise<void> => {
     try {
         const { _id }: { _id: string } = req.body;
-        await tasksModel.findByIdAndUpdate(_id, { isComplete: true });
+        const userId = req.body.userId;
+
+        await tasksModel.findOneAndUpdate({ _id, userId }, { isComplete: true });
         res.send("Task Marked as Complete Successfully");
     } catch (error) {
         console.error(error);
@@ -59,7 +69,9 @@ export const markTaskAsComplete = async (req: Request, res: Response): Promise<v
 
 export const getCompletedTasks = async (req: Request, res: Response): Promise<void> => {
     try {
-        const tasks: Task[] = await tasksModel.find({ isComplete: true });
+        const userId = req.body.userId;
+
+        const tasks: Task[] = await tasksModel.find({ userId, isComplete: true });
         res.send(tasks);
     } catch (error) {
         console.error(error);

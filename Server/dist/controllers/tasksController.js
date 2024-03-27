@@ -1,7 +1,8 @@
 import tasksModel from '../models/tasksModel.js';
 export const getTasks = async (req, res) => {
     try {
-        const tasks = await tasksModel.find();
+        const userId = req.body.userId;
+        const tasks = await tasksModel.find({ userId });
         res.send(tasks);
     }
     catch (error) {
@@ -12,7 +13,8 @@ export const getTasks = async (req, res) => {
 export const saveTasks = async (req, res) => {
     try {
         const { text } = req.body;
-        const task = await tasksModel.create({ text });
+        const userId = req.body.userId;
+        const task = await tasksModel.create({ userId, text });
         console.log("Task Addition was Successful");
         console.log(task);
         res.send(task);
@@ -25,7 +27,8 @@ export const saveTasks = async (req, res) => {
 export const updateTasks = async (req, res) => {
     try {
         const { _id, text } = req.body;
-        await tasksModel.findByIdAndUpdate(_id, { text });
+        const userId = req.body.userId;
+        await tasksModel.findOneAndUpdate({ _id, userId }, { text });
         res.send("Task Updated Successfully");
     }
     catch (error) {
@@ -36,7 +39,8 @@ export const updateTasks = async (req, res) => {
 export const deleteTasks = async (req, res) => {
     try {
         const { _id } = req.body;
-        await tasksModel.findByIdAndDelete(_id);
+        const userId = req.body.userId;
+        await tasksModel.findOneAndDelete({ _id, userId });
         res.send("Task Deleted Successfully");
     }
     catch (error) {
@@ -47,7 +51,8 @@ export const deleteTasks = async (req, res) => {
 export const markTaskAsComplete = async (req, res) => {
     try {
         const { _id } = req.body;
-        await tasksModel.findByIdAndUpdate(_id, { isComplete: true });
+        const userId = req.body.userId;
+        await tasksModel.findOneAndUpdate({ _id, userId }, { isComplete: true });
         res.send("Task Marked as Complete Successfully");
     }
     catch (error) {
@@ -57,7 +62,8 @@ export const markTaskAsComplete = async (req, res) => {
 };
 export const getCompletedTasks = async (req, res) => {
     try {
-        const tasks = await tasksModel.find({ isComplete: true });
+        const userId = req.body.userId;
+        const tasks = await tasksModel.find({ userId, isComplete: true });
         res.send(tasks);
     }
     catch (error) {
