@@ -3,7 +3,7 @@ import tasksModel, { Task } from '../models/tasksModel.js';
 
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.body.userId;
+        const userId = req.params.userId;
 
         const tasks: Task[] = await tasksModel.find({ userId });
         res.send(tasks);
